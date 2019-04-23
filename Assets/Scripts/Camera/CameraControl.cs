@@ -34,10 +34,11 @@ public class CameraControl : MonoBehaviour
             X = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * MouseSense;
             Y += Input.GetAxis("Mouse Y") * MouseSense;
             Y = Mathf.Clamp(Y, -limit, limit);
-           
-            
+    
+
         }
         transform.localEulerAngles = new Vector3(-Y, X, 0);
         transform.position = transform.localRotation * offset + target.position;
+
     }
 }
