@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Move : MonoBehaviour
 {
-    public static float Speed = 15f;//скорость
+    public float Speed = 15f;//скорость
     public float Turn = 1f;// скорость поворота
-    public float Slow = 1.0f;
+    public float Slow = 0.2f;
     public float Accelerate = 2.5f;
-    public float Accelerate_lim = Speed *2;// предел ускорения
+    public float Accelerate_lim;// предел ускорения
     private Rigidbody rb;// получаем тело 
     private SphereCollider sc;
     Vector3 start;// координаты стартовой позиции
@@ -20,6 +20,7 @@ public class Move : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Accelerate_lim = Speed * 2;
         rb = GetComponent<Rigidbody>();// инициализируем тело
         sc = GetComponent<SphereCollider>();
         GameObject go = GameObject.Find("Sphere");// ищем позицию сферы
@@ -73,7 +74,7 @@ public class Move : MonoBehaviour
     }
     public void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && IsGround)
+        if (Input.GetKeyDown(KeyCode.Space) && IsGround && Input.anyKey != Input.GetKey(KeyCode.LeftControl))
         {
             rb.AddForce(Vector3.up * jumpforce);
         }
@@ -84,7 +85,7 @@ public class Move : MonoBehaviour
         Vturn = Camera.transform.right;// вектор поворота 
         if (IsGround)
         {
-            if (Input.GetKey(KeyCode.W))
+            if (Input.GetKey(KeyCode.W) && Input.anyKey != Input.GetKey(KeyCode.LeftControl))
             {
                 rb.AddForce(VCam * Speed);// Задаем движение по вектору
                 if (IsShift && (rb.velocity.magnitude < Accelerate_lim))
@@ -92,24 +93,22 @@ public class Move : MonoBehaviour
                     rb.AddForce(rb.velocity * Accelerate);//ускорение
                 }
             }
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.A) && Input.anyKey != Input.GetKey(KeyCode.LeftControl))
             {
                 rb.AddForce(Vturn * -Speed * Turn);
             }
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKey(KeyCode.D) && Input.anyKey != Input.GetKey(KeyCode.LeftControl))
             {
                 rb.AddForce(Vturn * Speed * Turn);
             }
-            if (Input.GetKey(KeyCode.S))
+            if (Input.GetKey(KeyCode.S) && Input.anyKey != Input.GetKey(KeyCode.LeftControl))
             {
                 rb.AddForce(VCam * -Speed);
             }
             if (Input.GetKey(KeyCode.LeftControl))// торможение
             {
-                if (rb.velocity.magnitude < Speed)
-                {
-                    rb.AddForce(-rb.velocity * Slow);
-                }
+                rb.AddForce(VCam * Speed);
+                rb.AddForce(rb.velocity* -Slow);
             }
 
         }
