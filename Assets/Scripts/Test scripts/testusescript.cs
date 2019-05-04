@@ -17,7 +17,19 @@ public class testusescript : MonoBehaviour {
     {
         Score.text = "Score " + score;
 	}
-
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Rigidbody body = hit.gameObject.GetComponent<Rigidbody>();
+        if(body != null)
+        body.AddForce(hit.moveDirection * 10f);
+    }
+    private void OnTriggerStay(Collider collider)
+    {
+        if(Input.GetKey(KeyCode.E))
+         {
+            collider.transform.rotation *= Quaternion.Euler(0f, 1f, 0f);
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Use"))

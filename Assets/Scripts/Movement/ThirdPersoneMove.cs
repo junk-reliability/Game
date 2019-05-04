@@ -5,20 +5,22 @@ using UnityEngine;
 public class ThirdPersoneMove : MonoBehaviour
 {
     CharacterController control;
-    Animation animator;
+    Animator animator;
     public float Speed = 15f;
+    float tmp;
+    float Slow;
     public Vector3 VCam;// вектор движения в сторону камеры
     public Vector3 Vturn;// вектор поворота
     public GameObject Camera;
-    public float Turn = 1f;// скорость поворота
-    private float Slow;
     public int jumpforce;
-    public bool IsGround, IsShift;
+    public bool IsGround, IsShift, IsCtrl;
     // Use this for initialization
     void Start ()
     {
+        Slow = Speed / 2;//хранение значения скорости crawl
+        tmp = Speed; // хранение значения скорости
         control = GetComponent<CharacterController>();
-        animator = GetComponent<Animation>();
+        animator = GetComponent<Animator>();
     }
 	
 	// Update is called once per frame
@@ -26,6 +28,7 @@ public class ThirdPersoneMove : MonoBehaviour
     {
         Chek();
         Shift();
+        L_Ctrl();
         Movement();
         Jump();
     }
@@ -36,11 +39,25 @@ public class ThirdPersoneMove : MonoBehaviour
         if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out rh, 0.5f))// проверяем касается ли луч поверхности
         {
             IsGround = true;
-            
         }
         else
         {
             IsGround = false;
+        }
+    }
+    public void L_Ctrl()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftControl))// Красться
+        {
+            if (IsCtrl == true)
+            {
+                IsCtrl = false;
+            }
+            else
+            { 
+                IsCtrl = true;
+            }
+
         }
     }
     public void Shift()// Проверка на нажатие шифта
@@ -56,43 +73,63 @@ public class ThirdPersoneMove : MonoBehaviour
     }
     public void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && IsGround && Input.anyKey != Input.GetKey(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.Space) && IsGround)
         {
-           
+            float jm = Input.GetAxis("Jump");
+            Vector3 dir = transform.TransformDirection(new Vector3(0f, jm * jumpforce, 0f));
+            control.Move(dir * Time.smoothDeltaTime);
         }
+       
     }
     public void Movement()
     {
-            VCam = Camera.transform.forward;// вектор движения в сторону камеры
-            Vturn = Camera.transform.right;// вектор поворота 
-        if (IsGround)
+        VCam = Camera.transform.forward;// вектор движения в сторону камеры
+        Vturn = Camera.transform.right;// вектор поворота
+        if(Input.GetKey(KeyCode.Mouse1))//поворот персонажа в сторону камеры
         {
-            if (Input.GetKey(KeyCode.W) && Input.anyKey != Input.GetKey(KeyCode.LeftControl))
-            {
-                control.Move(VCam * Speed);// Задаем движение по вектору
-                if (IsShift)
-                {
-                    control.Move(VCam * Speed*2);//ускорение
-                }
-            }
-            if (Input.GetKey(KeyCode.A) && Input.anyKey != Input.GetKey(KeyCode.LeftControl))
-            {
-                control.Move(Vturn * -Speed * Turn);
-            }
-            if (Input.GetKey(KeyCode.D) && Input.anyKey != Input.GetKey(KeyCode.LeftControl))
-            {
-                control.Move(Vturn * Speed * Turn);
-            }
-            if (Input.GetKey(KeyCode.S) && Input.anyKey != Input.GetKey(KeyCode.LeftControl))
-            {
-                control.Move(VCam * -Speed);
-            }
-            if (Input.GetKey(KeyCode.LeftControl))// торможение
-            {
-                control.Move(VCam * Speed * Turn);
-                control.Move(VCam * -Speed * Turn);
-            }
+            transform.LookAt(new Vector3(VCam.x + transform.position.x , transform.position.y, VCam.z + transform.position.z ));
         }
-       
+        if (Input.GetKey(KeyCode.W) && IsShift)
+        {
+            animator.SetBool("Run", true);
+            control.Move(VCam * Speed * 2 * Time.deltaTime);//ускорение
+        }
+        else
+        {
+            animator.SetBool("Run", false);
+        }
+        if (Input.GetKey(KeyCode.W))
+        {
+            animator.SetBool("walk", true);// воспроизводим анимацию через аниматор
+            control.Move(VCam * Speed * Time.deltaTime);// Задаем движение по вектору
+        }
+        else
+        {
+            animator.SetBool("walk", false);
+        }
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            control.Move(Vturn * -Speed * Time.deltaTime);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            control.Move(Vturn * Speed * Time.deltaTime);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            VCam = new Vector3(Camera.transform.forward.x, 0f, Camera.transform.forward.z);
+            control.Move(VCam * -Speed * Time.deltaTime);
+        }
+
+        if (IsCtrl)
+        {
+            Speed = Slow;
+        }
+        else
+        {
+            Speed = tmp;
+        }
+
     }
 }
