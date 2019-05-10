@@ -85,11 +85,8 @@ public class ThirdPersoneMove : MonoBehaviour
     {
         VCam = Camera.transform.forward;// вектор движения в сторону камеры
         Vturn = Camera.transform.right;// вектор поворота
-        if(Input.GetKey(KeyCode.Mouse1))//поворот персонажа в сторону камеры
-        {
-            transform.LookAt(new Vector3(VCam.x + transform.position.x , transform.position.y, VCam.z + transform.position.z ));
-        }
-        if (Input.GetKey(KeyCode.W) && IsShift)
+        transform.LookAt(new Vector3(VCam.x + transform.position.x , transform.position.y, VCam.z + transform.position.z ));//поворот персонажа в сторону камеры
+            if (Input.GetKey(KeyCode.W) && IsShift)
         {
             animator.SetBool("Run", true);
             control.Move(VCam * Speed * 2 * Time.deltaTime);//ускорение

@@ -21,22 +21,17 @@ public class CameraControl : MonoBehaviour
         offset = new Vector3(offset.x, offset.y, -Mathf.Abs(zoomMax) / 2);
         transform.position = target.position + offset;
     }
-	
-	// Update is called once per frame
-	void LateUpdate ()// LateUpdate - камера будет двигаться после движения персонажа, обновляется после Update
+
+    // Update is called once per frame
+    void LateUpdate()// LateUpdate - камера будет двигаться после движения персонажа, обновляется после Update
     {
 
-        if (Input.GetKey(KeyCode.Mouse1))
-        {
-            if (Input.GetAxis("Mouse ScrollWheel") > 0) offset.z += zoom;// приблизить
-            else if (Input.GetAxis("Mouse ScrollWheel") < 0) offset.z -= zoom;// отдалить
-            offset.z = Mathf.Clamp(offset.z, -Mathf.Abs(zoomMax), -Mathf.Abs(zoomMin));// значение между мин и макс
-            X = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * MouseSense;
-            Y += Input.GetAxis("Mouse Y") * MouseSense;
-            Y = Mathf.Clamp(Y, -limit, limit);
-    
-
-        }
+        if (Input.GetAxis("Mouse ScrollWheel") > 0) offset.z += zoom;// приблизить
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0) offset.z -= zoom;// отдалить
+        offset.z = Mathf.Clamp(offset.z, -Mathf.Abs(zoomMax), -Mathf.Abs(zoomMin));// значение между мин и макс
+        X = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * MouseSense;
+        Y += Input.GetAxis("Mouse Y") * MouseSense;
+        Y = Mathf.Clamp(Y, -limit, limit);
         transform.localEulerAngles = new Vector3(-Y, X, 0);
         transform.position = transform.localRotation * offset + target.position;
 
