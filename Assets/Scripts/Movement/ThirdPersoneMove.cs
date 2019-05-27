@@ -9,9 +9,11 @@ public class ThirdPersoneMove : MonoBehaviour
     public float Speed = 15f;
     float tmp;
     float Slow;
+    bool fl;
     public Vector3 VCam;// вектор движения в сторону камеры
     public Vector3 Vturn;// вектор поворота
     public GameObject Camera;
+    public GameObject FlashLight;
     public int jumpforce;
     public bool IsGround, IsShift, IsCtrl;
     // Use this for initialization
@@ -31,6 +33,7 @@ public class ThirdPersoneMove : MonoBehaviour
         L_Ctrl();
         Movement();
         Jump();
+        FL();
     }
     public void Chek()// Проверка касается ли объект поверхности
     {
@@ -69,6 +72,22 @@ public class ThirdPersoneMove : MonoBehaviour
         else
         {
             IsShift = false;
+        }
+    }
+    public void FL ()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (fl)
+            {
+                FlashLight.SetActive(false);
+                fl = false;
+            }
+            else
+            {
+                FlashLight.SetActive(true);
+                fl = true;
+            }
         }
     }
     public void Jump()
