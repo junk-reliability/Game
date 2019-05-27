@@ -5,6 +5,7 @@ using UnityEngine;
 public class DoorsOpen : MonoBehaviour
 {
     Animator animator;
+    
     bool DOp;
     void Start()
     {

@@ -8,6 +8,7 @@ public class testusescript : MonoBehaviour {
     // Use this for initialization
     public int score = 0;
     public Text Score;
+    public Text Interactives;
     void Start ()
     {
     }
@@ -25,13 +26,20 @@ public class testusescript : MonoBehaviour {
     }
     private void OnTriggerStay(Collider collider)
     {
+        if (collider.gameObject.CompareTag("Door"))
+        {
+            Interactives.text = "Press E";
+        }
         if(Input.GetKey(KeyCode.E))
          {
             collider.transform.rotation *= Quaternion.Euler(0f, 1f, 0f);
         }
  
     }
-    
+    private void OnTriggerExit(Collider other)
+    {
+        Interactives.text = null;
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Use"))
@@ -39,5 +47,6 @@ public class testusescript : MonoBehaviour {
             Destroy(other.gameObject);
             score++;
         }
+      
     }
 }
