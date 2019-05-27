@@ -7,7 +7,7 @@ public class Menu : MonoBehaviour
 
     public void StartGame()
     {
-        Application.LoadLevel("Main");
+        Application.LoadLevel(1);
     }
     public void LoadGame()
     {

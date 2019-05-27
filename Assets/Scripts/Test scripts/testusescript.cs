@@ -8,15 +8,15 @@ public class testusescript : MonoBehaviour {
     // Use this for initialization
     public int score = 0;
     public Text Score;
-	void Start () {
-		
-	}
+    void Start ()
+    {
+    }
 	
 	// Update is called once per frame
 	void Update ()
     {
         Score.text = "Score " + score;
-	}
+    }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         Rigidbody body = hit.gameObject.GetComponent<Rigidbody>();
@@ -29,7 +29,9 @@ public class testusescript : MonoBehaviour {
          {
             collider.transform.rotation *= Quaternion.Euler(0f, 1f, 0f);
         }
+ 
     }
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Use"))
